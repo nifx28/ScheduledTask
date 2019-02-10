@@ -6,13 +6,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-/// <summary>
-/// Add-Type -TypeDefinition ([IO.File]::ReadAllText("$pwd\ElevatedPrivileges.cs")) -ReferencedAssemblies "System.Windows.Forms" -OutputAssembly "ElevatedPrivileges.dll"
-/// [Reflection.Assembly]::Load([IO.File]::ReadAllBytes("$pwd\ElevatedPrivileges.dll"))
-/// If (([Management.Automation.PSTypeName]'ElevatedPrivileges').Type) { [ElevatedPrivileges]::Invoke("C:\ScheduledTask\ScheduledTask.exe") }
-/// [Convert]::ToBase64String((Get-Content -Path .\ElevatedPrivileges.dll -Encoding Byte))
-/// [Reflection.Assembly]::Load([Convert]::FromBase64String("")) | Out-Null
-/// </summary>
 public class ElevatedPrivileges
 {
     public enum CmdShow { SW_SHOW = 5 }
