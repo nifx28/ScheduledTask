@@ -128,7 +128,16 @@ ShortSvcName=""ed23c88e-8b38-4afe-be0f-cde578e23259""
             }
         }
 
-        FindWindowByProcess();
+        sw = Stopwatch.StartNew();
+
+        while (!FindWindowByProcess())
+        {
+            if (sw.Elapsed > TimeSpan.FromSeconds(5))
+            {
+                break;
+            }
+        }
+
         proc.WaitForExit();
         return (proc.ExitCode == 0);
     }

@@ -54,6 +54,15 @@ namespace ScheduledTask
             {
                 IRegisteredTask task = rootFolder.GetTask(Program.Name);
                 sb.AppendLine($"{task.Name}: {task.Definition.Principal.UserId}");
+                sb.AppendLine();
+                sb.AppendLine("是否移除此排程？");
+
+                if (MessageBox.Show(sb.ToString(), Program.Product, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    rootFolder.DeleteTask(Program.Name, 0);
+                }
+
+                return;
             }
             catch (FileNotFoundException)
             {
@@ -93,6 +102,11 @@ namespace ScheduledTask
                     sb.AppendLine();
                     sb.AppendLine($"{ex.GetType().Name}: {ex.Message}");
                 }
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine();
+                sb.AppendLine($"{ex.GetType().Name}: {ex.Message}");
             }
 
             MessageBox.Show(sb.ToString(), Program.Product);
