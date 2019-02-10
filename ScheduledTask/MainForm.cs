@@ -30,19 +30,24 @@ namespace ScheduledTask
             ActiveControl = btnCreate;
         }
 
+        private void btnElevated_Click(object sender, EventArgs e)
+        {
+            // https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/cmstp
+            // cmstp | Microsoft Docs
+            ElevatedPrivileges.Invoke(Assembly.GetExecutingAssembly().Location);
+        }
+
         private void btnCreate_Click(object sender, EventArgs e)
         {
             var service = new TaskScheduler.TaskScheduler();
             service.Connect();
             var rootFolder = service.GetFolder(@"\");
-            var product = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyProductAttribute>().Product;
-            var name = product + "_" + Assembly.GetExecutingAssembly().GetCustomAttribute<GuidAttribute>().Value.ToUpperInvariant();
             var sb = new StringBuilder();
-            sb.AppendLine($"[{name}]");
+            sb.AppendLine($"[{Program.Name}]");
 
             try
             {
-                IRegisteredTask task = rootFolder.GetTask(name);
+                IRegisteredTask task = rootFolder.GetTask(Program.Name);
                 sb.AppendLine($"{task.Name}: {task.Definition.Principal.UserId}");
             }
             catch (FileNotFoundException)
@@ -73,7 +78,10 @@ namespace ScheduledTask
                     var action = taskDefinition.Actions.Create(_TASK_ACTION_TYPE.TASK_ACTION_EXEC) as IExecAction;
                     action.Path = Assembly.GetExecutingAssembly().Location;
                     action.Arguments = "/job";
-                    rootFolder.RegisterTaskDefinition(name, taskDefinition, (int)_TASK_CREATION.TASK_CREATE_OR_UPDATE, @"NT AUTHORITY\SYSTEM", null, _TASK_LOGON_TYPE.TASK_LOGON_SERVICE_ACCOUNT);
+
+                    // https://docs.microsoft.com/en-us/windows/desktop/services/localsystem-account
+                    // LocalSystem Account - Windows applications | Microsoft Docs
+                    rootFolder.RegisterTaskDefinition(Program.Name, taskDefinition, (int)_TASK_CREATION.TASK_CREATE_OR_UPDATE, @"NT AUTHORITY\SYSTEM", null, _TASK_LOGON_TYPE.TASK_LOGON_SERVICE_ACCOUNT);
                 }
                 catch (Exception ex)
                 {
@@ -82,7 +90,7 @@ namespace ScheduledTask
                 }
             }
 
-            MessageBox.Show(sb.ToString(), product);
+            MessageBox.Show(sb.ToString(), Program.Product);
         }
     }
 }

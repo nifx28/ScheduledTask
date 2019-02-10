@@ -33,6 +33,7 @@
             this.tbSid = new System.Windows.Forms.TextBox();
             this.lbSid = new System.Windows.Forms.Label();
             this.btnCreate = new System.Windows.Forms.Button();
+            this.btnElevated = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbCurrentUser
@@ -84,11 +85,23 @@
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
+            // btnElevated
+            // 
+            this.btnElevated.AutoSize = true;
+            this.btnElevated.Location = new System.Drawing.Point(202, 56);
+            this.btnElevated.Name = "btnElevated";
+            this.btnElevated.Size = new System.Drawing.Size(79, 23);
+            this.btnElevated.TabIndex = 5;
+            this.btnElevated.Text = "提升權限(&E)";
+            this.btnElevated.UseVisualStyleBackColor = true;
+            this.btnElevated.Click += new System.EventHandler(this.btnElevated_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(377, 90);
+            this.Controls.Add(this.btnElevated);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.tbSid);
             this.Controls.Add(this.lbSid);
@@ -111,6 +124,7 @@
         private System.Windows.Forms.TextBox tbSid;
         private System.Windows.Forms.Label lbSid;
         private System.Windows.Forms.Button btnCreate;
+        private System.Windows.Forms.Button btnElevated;
     }
 }
 
