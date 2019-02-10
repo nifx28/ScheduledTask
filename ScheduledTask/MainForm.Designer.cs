@@ -34,6 +34,7 @@
             this.lbSid = new System.Windows.Forms.Label();
             this.btnCreate = new System.Windows.Forms.Button();
             this.btnElevated = new System.Windows.Forms.Button();
+            this.btnFindWindow = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lbCurrentUser
@@ -96,11 +97,23 @@
             this.btnElevated.UseVisualStyleBackColor = true;
             this.btnElevated.Click += new System.EventHandler(this.btnElevated_Click);
             // 
+            // btnFindWindow
+            // 
+            this.btnFindWindow.AutoSize = true;
+            this.btnFindWindow.Location = new System.Drawing.Point(117, 56);
+            this.btnFindWindow.Name = "btnFindWindow";
+            this.btnFindWindow.Size = new System.Drawing.Size(79, 23);
+            this.btnFindWindow.TabIndex = 6;
+            this.btnFindWindow.Text = "尋找視窗(&F)";
+            this.btnFindWindow.UseVisualStyleBackColor = true;
+            this.btnFindWindow.Click += new System.EventHandler(this.btnFindWindow_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(377, 90);
+            this.Controls.Add(this.btnFindWindow);
             this.Controls.Add(this.btnElevated);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.tbSid);
@@ -125,6 +138,7 @@
         private System.Windows.Forms.Label lbSid;
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.Button btnElevated;
+        private System.Windows.Forms.Button btnFindWindow;
     }
 }
 

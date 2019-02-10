@@ -30,6 +30,11 @@ namespace ScheduledTask
             ActiveControl = btnCreate;
         }
 
+        private void btnFindWindow_Click(object sender, EventArgs e)
+        {
+            ElevatedPrivileges.FindWindow();
+        }
+
         private void btnElevated_Click(object sender, EventArgs e)
         {
             // https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/cmstp

